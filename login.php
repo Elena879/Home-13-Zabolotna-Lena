@@ -20,14 +20,13 @@
 
 
 <?php
-$mysqli = new mysqli('home13.local', 'root', 'root', 'home_13');
-
 if (isset($_POST['submit'])) {
+    $mysqli = new mysqli('home13.local', 'root', 'root', 'home_13');
+    
     $username = mysqli_real_escape_string($mysqli, trim($_POST['username']));
-    $password = mysqli_real_escape_string($mysqli, trim($_POST['password']));
-    $md5password = md5($password);
+    $password = md5(mysqli_real_escape_string($mysqli, trim($_POST['password'])));
 
-    if ($result = $mysqli->query("SELECT * FROM registration WHERE username ='$username' AND password = '$md5password'")) {
+    if ($result = $mysqli->query("SELECT * FROM registration WHERE username ='$username' AND password = '$password'")) {
 
         if ($row = $result->fetch_assoc()) {
             echo '<strong>You are authorized!</strong>';
@@ -36,9 +35,8 @@ if (isset($_POST['submit'])) {
             echo '<strong>Try again.</strong>';
         }
     }
-    $result->close();
+    $mysqli->close();
 }
-$mysqli->close();
 ?>
 
 
